@@ -15,8 +15,15 @@ class noisyDataGenerator:
             )
             noiseSignal = resampledNoiseSignal
 
-        # Reshaping noise to be equal to clean signal
-        # TODO
+        # Reshaping noise to be equal to clean signal in length
+        if cleanSignal.shape[0] > resampledNoiseSignal.shape[0]:
+            replayTimes = (cleanSignal.shape[0]
+                           // resampledNoiseSignal.shape[0]) + 1
+            resampledNoiseSignal = np.repeat(resampledNoiseSignal,
+                                             replayTimes)
+
+        # Cutting to the length of the clean signal
+        resampledNoiseSignal = resampledNoiseSignal[:cleanSignal.shape[0]]
 
         # Compute the clean signal power
         cleanSignalPower = np.sum(cleanSignal**2)/cleanSignal.size()
@@ -34,6 +41,6 @@ class noisyDataGenerator:
         noisyOutput = cleanSignal + targetNoiseSignal
 
         # If the noisyOutput have values larger than np.int16.max
-        # TODO
+        # TODO By now we just assumed that this wont happen
 
         return noisyOutput
