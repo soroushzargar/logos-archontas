@@ -9,11 +9,11 @@ class noisyDataGenerator:
     def generateNoisySignal(cleanSignal, noiseSignal, cleanSr,
                             noiseSr, SNR, verbos):
         # Check whether the clean and noise signal have same sample rate
+        resampledNoiseSignal = noiseSignal
         if cleanSr != noiseSr:
             resampledNoiseSignal = librosa.core.resample(
-                noiseSr, noiseSr, cleanSr
+                noiseSignal, noiseSr, cleanSr
             )
-            noiseSignal = resampledNoiseSignal
 
         # Reshaping noise to be equal to clean signal in length
         if cleanSignal.shape[0] > resampledNoiseSignal.shape[0]:
@@ -26,17 +26,19 @@ class noisyDataGenerator:
         resampledNoiseSignal = resampledNoiseSignal[:cleanSignal.shape[0]]
 
         # Compute the clean signal power
-        cleanSignalPower = np.sum(cleanSignal**2)/cleanSignal.size()
+        cleanSignalPower = np.sum(cleanSignal**2)/cleanSignal.size
 
         # Mean shifting the noise data
-        noiseSignal = noiseSignal - np.mean(noiseSignal)
+        resampledNoiseSignal = resampledNoiseSignal - \
+            np.mean(resampledNoiseSignal)
 
         # Creating a noise w.r.t SNR,
         #   Note that SNR here is on decible standard
         pureSNR = 10**(SNR/10)
         targetNoiseVariance = cleanSignalPower / pureSNR
-        targetNoiseSignal = (np.sqrt(targetNoiseVariance) * noiseSignal)\
-            / np.std(noiseSignal)
+        targetNoiseSignal = (np.sqrt(targetNoiseVariance) *
+                             resampledNoiseSignal)\
+            / np.std(resampledNoiseSignal)
 
         noisyOutput = cleanSignal + targetNoiseSignal
 
@@ -44,3 +46,7 @@ class noisyDataGenerator:
         # TODO By now we just assumed that this wont happen
 
         return noisyOutput
+
+
+class audioReadWriteUtils:
+    pass
