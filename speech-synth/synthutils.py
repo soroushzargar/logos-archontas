@@ -12,15 +12,16 @@ class noisyDataGenerator:
         resampledNoiseSignal = noiseSignal
         if cleanSr != noiseSr:
             resampledNoiseSignal = librosa.core.resample(
-                noiseSignal, noiseSr, cleanSr
+                noiseSignal, noiseSr, cleanSr, fix=True,
+                scale=True
             )
 
         # Reshaping noise to be equal to clean signal in length
         if cleanSignal.shape[0] > resampledNoiseSignal.shape[0]:
             replayTimes = (cleanSignal.shape[0]
                            // resampledNoiseSignal.shape[0]) + 1
-            resampledNoiseSignal = np.repeat(resampledNoiseSignal,
-                                             replayTimes)
+            resampledNoiseSignal = np.tile(resampledNoiseSignal,
+                                           replayTimes)
 
         # Cutting to the length of the clean signal
         resampledNoiseSignal = resampledNoiseSignal[:cleanSignal.shape[0]]
