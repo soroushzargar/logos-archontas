@@ -47,11 +47,12 @@ class representation:
         if show is True:
             plt.show()
 
+    @staticmethod
     def waveFigure(audioSignal=None, audioSr=16000,
                    audioSpectrogram=None, show=True,
                    save=False, saveLocation=None, mode="mel"):
-        librosa.display.waveplot(y, sr=sr)
-        plt.title('Stereo')
+        librosa.display.waveplot(audioSignal, sr=audioSr)
+        plt.title('Waveplot')
         if save is True and saveLocation is not None:
             plt.savefig(saveLocation)
         if show is True:
