@@ -48,7 +48,7 @@ class noisyDataGenerator:
 
         return noisyOutput
 
-    def generateDataSet():
+    def generateDataSet(self):
         pass
 
 
